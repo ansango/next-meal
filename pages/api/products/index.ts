@@ -13,7 +13,7 @@ router.get(async (req, res) => {
       const products = await client.product.findMany({
         orderBy: { createdAt: "desc" },
       });
-
+      client.$disconnect();
       res.status(200).json(products);
     } catch (error) {
       res.status(500).json({ error });

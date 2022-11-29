@@ -18,6 +18,7 @@ router.get(async (req, res) => {
           },
         },
       });
+      client.$disconnect();
       const data = categories.filter(({ Products }) => Products.length > 0);
 
       res.status(200).json(data);

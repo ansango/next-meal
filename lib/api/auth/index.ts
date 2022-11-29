@@ -14,7 +14,7 @@ const session: Partial<SessionOptions> = {
 };
 
 const pages: Partial<PagesOptions> = {
-  signIn: "/signin",
+  signIn: "/",
 };
 
 const secret: string | undefined = process.env.NEXTAUTH_SECRET;

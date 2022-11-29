@@ -2,7 +2,10 @@ import { type CallbacksOptions } from "next-auth";
 
 export const callbacks: Partial<CallbacksOptions> = {
   async signIn({ user, account, profile, email, credentials }) {
-    return true;
+    if (user && user.email === process.env.PRIVATE_EMAIL_USER) {
+      return true;
+    }
+    return false;
   },
   async redirect({ url, baseUrl }) {
     const isSignInPage = url.includes("signin");

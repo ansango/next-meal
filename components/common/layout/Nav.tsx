@@ -118,7 +118,7 @@ export const Nav = () => {
                   <Button
                     className="normal-case text-sm"
                     variant="gradient"
-                    onClick={() => signIn("google")}
+                    onClick={() => signIn("google", { callbackUrl: "/" })}
                   >
                     Empezar
                   </Button>

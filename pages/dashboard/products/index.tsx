@@ -15,9 +15,11 @@ import { useCategoriesWithProducts } from "lib/fetching/hooks";
 
 const TabsNav = ({
   data,
-  defaultTab,
+  defaultTab = "",
+  isLoading,
 }: {
   defaultTab?: string | number;
+  isLoading?: boolean;
   data: {
     label: string;
     value: string | number;
@@ -26,29 +28,46 @@ const TabsNav = ({
 }) => {
   return (
     <Tabs value={defaultTab}>
-      <TabsHeader className="grid gap-1 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {data.map(({ label, value }) => (
-          <Tab key={value} value={value}>
-            {label}
-          </Tab>
-        ))}
-      </TabsHeader>
-      <TabsBody>
-        {data.map(({ value, desc }) => (
-          <TabPanel key={value} value={value} className="text-gray-900">
-            {desc}
-          </TabPanel>
-        ))}
-      </TabsBody>
+      {isLoading ? (
+        <>
+          <TabsHeader className="grid gap-1 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 20 }, (_, i) => (
+              <Tab
+                key={i}
+                value={i}
+                className="bg-blue-gray-100 animate-pulse rounded-md h-8"
+              >
+                <></>
+              </Tab>
+            ))}
+          </TabsHeader>
+        </>
+      ) : (
+        <>
+          <TabsHeader className="grid gap-1 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {data.map(({ label, value }) => (
+              <Tab key={value} value={value}>
+                {label}
+              </Tab>
+            ))}
+          </TabsHeader>
+          <TabsBody>
+            {data.map(({ value, desc }) => (
+              <TabPanel key={value} value={value} className="text-gray-900">
+                {desc}
+              </TabPanel>
+            ))}
+          </TabsBody>
+        </>
+      )}
     </Tabs>
   );
 };
 
 const Products = () => {
-  const { data } = useCategoriesWithProducts();
-  const dataTab =
-    (data &&
-      data.map(({ name, Products }) => ({
+  const { data, isLoading, isFetching } = useCategoriesWithProducts();
+  const dataTab = data
+    ? data.map(({ name, Products }) => ({
         label: `${name} (${Products.length})`,
         value: name,
         desc: (
@@ -68,13 +87,13 @@ const Products = () => {
             </ul>
           </div>
         ),
-      }))) ||
-    [];
+      }))
+    : [];
 
   return (
     <Container className="space-y-10">
       <Breadcrumb />
-      <TabsNav data={dataTab} defaultTab="Todos" />
+      <TabsNav data={dataTab} defaultTab="Todos" isLoading={isLoading || isFetching} />
     </Container>
   );
 };
