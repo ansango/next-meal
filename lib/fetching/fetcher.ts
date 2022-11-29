@@ -9,6 +9,7 @@ export const fetcher: Fetcher = async <T>(
   input: RequestInfo,
   init?: RequestInit
 ): Promise<T> => {
+    console.log(`${BASE_URL}${input}`);
   return await fetch(`${BASE_URL}${input}`, init)
     .then()
     .then((response) => {
