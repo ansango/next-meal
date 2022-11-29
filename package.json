@@ -14,7 +14,7 @@
   "dependencies": {
     "@material-tailwind/react": "^1.2.4",
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@prisma/client": "^4.6.1",
+    "@prisma/client": "^4.7.0",
     "@tanstack/react-query": "^4.18.0",
     "@tanstack/react-query-devtools": "^4.18.0",
     "next": "13.0.5",
@@ -24,6 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.5",
+    "react-icons": "^4.7.1",
     "typescript": "4.9.3"
   },
   "devDependencies": {
@@ -36,7 +37,7 @@
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "postcss": "^8.4.19",
-    "prisma": "^4.6.1",
+    "prisma": "^4.7.0",
     "tailwindcss": "^3.2.4",
     "ts-node": "^10.9.1"
   }

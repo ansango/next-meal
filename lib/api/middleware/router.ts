@@ -1,7 +1,5 @@
 import type { NextApiResponse, NextApiRequest } from "next";
-import { createRouter } from "next-connect";
 
-export const router = createRouter<NextApiRequest, NextApiResponse>();
 export const options = {
   onError: (err: any, req: NextApiRequest, res: NextApiResponse) => {
     console.error(err.stack);

@@ -58,20 +58,29 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+model Unit {
+    id      String    @id @default(auto()) @map("_id") @db.ObjectId
+    name    String
+    Product Product[]
+
+    @@unique([name])
+}
+
 model Product {
     id                     String                    @id @default(auto()) @map("_id") @db.ObjectId
     name                   String
     description            String
-    image                  String
-    price                  Float
-    quantity               Int
-    unit                   String
+    image                  String?
+    price                  Float?
+    quantity               Int?
+    unit                   Unit?                     @relation(fields: [unitId], references: [id])
     createdAt              DateTime                  @default(now())
     updatedAt              DateTime                  @updatedAt
     ProductsOnShoppingList ProductsOnShoppingLists[]
     ProductsOnMeals        ProductsOnMeals[]
     Category               Category?                 @relation(fields: [categoryId], references: [id])
     categoryId             String?                   @db.ObjectId
+    unitId                 String?                   @db.ObjectId
 
     @@unique([name])
 }

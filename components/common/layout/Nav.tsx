@@ -6,9 +6,10 @@ import {
   Button,
   Avatar,
   Container,
-  Popover,
-  PopoverHandler,
-  PopoverContent,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
 } from "components/common";
 
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -81,37 +82,22 @@ export const Nav = () => {
             </div>
             <div className="hidden lg:block ml-auto">{navList}</div>
             {data?.user ? (
-              <Popover placement="bottom-end">
-                <PopoverHandler>
+              <Menu placement="bottom-end">
+                <MenuHandler>
                   <Avatar
                     src={data.user?.image || ""}
                     size="sm"
                     variant="circular"
                     className="ml-8 cursor-pointer"
                   />
-                </PopoverHandler>
-                <PopoverContent className="flex flex-col">
+                </MenuHandler>
+                <MenuList className="flex flex-col">
                   <Link href="/dashboard">
-                    <Button
-                      fullWidth
-                      variant="text"
-                      color="blue-gray"
-                      className="normal-case text-start"
-                    >
-                      Dashboard
-                    </Button>
+                    <MenuItem>Dashboard</MenuItem>
                   </Link>
-                  <Button
-                    fullWidth
-                    variant="text"
-                    color="blue-gray"
-                    className="normal-case text-start"
-                    onClick={() => signOut()}
-                  >
-                    Cerrar sesión
-                  </Button>
-                </PopoverContent>
-              </Popover>
+                  <MenuItem onClick={() => signOut()}>Cerrar sesión</MenuItem>
+                </MenuList>
+              </Menu>
             ) : (
               <>
                 {!asPath.includes("dashboard") && (

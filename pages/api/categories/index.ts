@@ -16,14 +16,11 @@ router.get(async (req, res) => {
       const categories = await db.category.findMany({
         select: {
           name: true,
-          Products: {
-            orderBy: { createdAt: "desc" },
-          },
+          id: true,
         },
       });
-      const data = categories.filter(({ Products }) => Products.length > 0);
 
-      res.status(200).json(data);
+      res.status(200).json(categories);
     } catch (error) {
       res.status(500).json({ error });
     }

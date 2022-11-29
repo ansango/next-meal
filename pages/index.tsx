@@ -1,15 +1,5 @@
 import { Container, Form, FormInput, Button } from "components/common";
 
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-} from "@material-tailwind/react";
-
-
-
 const Home = () => {
   return (
     <Container>
