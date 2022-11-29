@@ -1,0 +1,169 @@
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Account {
+    id                String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.String
+    access_token      String? @db.String
+    id_token          String? @db.String
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    session_state     String?
+    theme             String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String         @id @default(auto()) @map("_id") @db.ObjectId
+    name          String?
+    email         String?        @unique
+    emailVerified DateTime?
+    image         String?
+    roles         String[]       @default(["user"])
+    avatar        String?
+    accounts      Account[]
+    Session       Session[]
+    ShoppingList  ShoppingList[]
+    Planner       MealPlanner[]
+}
+
+model VerificationToken {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Product {
+    id                     String                    @id @default(auto()) @map("_id") @db.ObjectId
+    name                   String
+    description            String
+    image                  String
+    price                  Float
+    quantity               Int
+    unit                   String
+    createdAt              DateTime                  @default(now())
+    updatedAt              DateTime                  @updatedAt
+    ProductsOnShoppingList ProductsOnShoppingLists[]
+    ProductsOnMeals        ProductsOnMeals[]
+    Category               Category?                 @relation(fields: [categoryId], references: [id])
+    categoryId             String?                   @db.ObjectId
+
+    @@unique([name])
+}
+
+model Step {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    position    Int
+    description String
+    image       String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    StepsOnMeal StepsOnMeal[]
+}
+
+model StepsOnMeal {
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    mealId String @db.ObjectId
+    stepId String @db.ObjectId
+    Step   Step   @relation(fields: [stepId], references: [id])
+    Meal   Meal   @relation(fields: [mealId], references: [id])
+
+    @@unique([mealId, stepId])
+}
+
+model Category {
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    description String
+    image       String
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    Products    Product[]
+    Meals       Meal[]
+}
+
+model Meal {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    description String
+    image       String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    ProductsOnMeals ProductsOnMeals[]
+    StepsOnMeal     StepsOnMeal[]
+    Category        Category?         @relation(fields: [categoryId], references: [id])
+    categoryId      String?           @db.ObjectId
+}
+
+model ProductsOnMeals {
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    mealId    String  @db.ObjectId
+    Meal      Meal    @relation(fields: [mealId], references: [id])
+    productId String  @db.ObjectId
+    Product   Product @relation(fields: [productId], references: [id])
+}
+
+model Day {
+    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+
+    @@unique([name])
+}
+
+model ShoppingList {
+    id                     String                    @id @default(auto()) @map("_id") @db.ObjectId
+    createdAt              DateTime                  @default(now())
+    price                  Float
+    userId                 String                    @db.ObjectId
+    User                   User                      @relation(fields: [userId], references: [id])
+    ProductsOnShoppingList ProductsOnShoppingLists[]
+}
+
+model ProductsOnShoppingLists {
+    id             String       @id @default(auto()) @map("_id") @db.ObjectId
+    shoppingListId String       @db.ObjectId
+    productId      String       @db.ObjectId
+    quantity       Int
+    ShoppingList   ShoppingList @relation(fields: [shoppingListId], references: [id])
+    Product        Product      @relation(fields: [productId], references: [id])
+}
+
+model MealPlanner {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    name       String?
+    from       DateTime
+    to         DateTime
+    categories Json[]
+    planner    Json[]
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    userId     String   @db.ObjectId
+    User       User     @relation(fields: [userId], references: [id])
+}
