@@ -9,9 +9,9 @@ import {
   Tab,
   TabPanel,
 } from "components/common";
-import { useQuery } from "@tanstack/react-query";
-import { type Product } from "@prisma/client";
+
 import { type ReactNode } from "react";
+import { useCategoriesWithProducts } from "lib/fetching/hooks";
 
 const TabsNav = ({
   data,
@@ -45,20 +45,10 @@ const TabsNav = ({
 };
 
 const Products = () => {
-  const { data } = useQuery<{ name: string; Products: Product[] }[]>({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const res = await fetch("/api/products/categories");
-      return res.json();
-    },
-  });
-  const allProducts = {
-    name: "Todos",
-    Products: data?.flatMap((category) => category.Products) ?? [],
-  };
+  const { data } = useCategoriesWithProducts();
   const dataTab =
     (data &&
-      [allProducts, ...data].map(({ name, Products }) => ({
+      data.map(({ name, Products }) => ({
         label: `${name} (${Products.length})`,
         value: name,
         desc: (

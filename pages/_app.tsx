@@ -22,7 +22,17 @@ function Auth({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+      refetchIntervalInBackground: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
 
 export default function App({
   Component,
