@@ -1,16 +1,14 @@
-import { Product } from "@prisma/client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { CategoryPopulated, PostProduct, Product } from "../domain";
 import {
-  CategoryPopulated,
-  fetchCategoriesPopulated,
+  deleteProduct,
   fetchCategories,
+  fetchCategoriesPopulated,
   fetchUnits,
   postProduct,
-  PostProduct,
   putProduct,
-  deleteProduct,
-} from "./functions";
+} from "../service";
 
 const staticConfig = { refetchOnMount: false, refetchOnWindowFocus: false };
 

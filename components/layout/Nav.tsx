@@ -10,7 +10,7 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
-} from "components/common";
+} from "components";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";

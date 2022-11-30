@@ -1,4 +1,4 @@
-import { Container, Form, FormInput, Button } from "components/common";
+import { Container } from "components";
 
 const Home = () => {
   return (
@@ -9,7 +9,8 @@ const Home = () => {
             <div className="relative inline-flex items-center mx-auto align-middle">
               <div className="pb-12 text-center">
                 <h1 className="max-w-5xl text-3xl font-bold leading-none tracking-tight text-neutral-600 md:text-5xl lg:text-6xl lg:max-w-7xl">
-                  Crea nuevos planes de alimentación, <br className="hidden lg:block" />
+                  Crea nuevos planes de alimentación,{" "}
+                  <br className="hidden lg:block" />
                   personaliza ingredientes, recetas y más.
                 </h1>
               </div>

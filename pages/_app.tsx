@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@material-tailwind/react";
-import { Layout } from "components/common";
+import { Layout } from "components";
 import { SessionProvider, useSession } from "next-auth/react";
 import { type ReactNode } from "react";
 import { type Session } from "next-auth";
