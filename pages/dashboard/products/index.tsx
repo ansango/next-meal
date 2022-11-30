@@ -16,17 +16,139 @@ import {
   FormInput,
   Button,
   FormSelect,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
 } from "components/common";
 
 import {
   useCategories,
   useCategoriesWithProducts,
+  useDeleteProduct,
   usePostProduct,
+  usePutProduct,
   useUnits,
 } from "lib/fetching/hooks";
 import { MdAdd } from "react-icons/md";
 
-import { PostProduct } from "lib/fetching/functions";
+import { PostProduct, ProductPopulated } from "lib/fetching/functions";
+import { useState } from "react";
+
+const EditDeleteFormProduct = ({ product }: { product: ProductPopulated }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
+  const { mutate } = usePutProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
+  const onSubmit = (data: {
+    name: string;
+    description: string;
+    price: string;
+    quantity: string;
+    unitId: string;
+    categoryId: string;
+  }) =>
+    mutate({
+      ...data,
+      price: parseFloat(data.price),
+      quantity: parseFloat(data.quantity),
+      id: product.id,
+      image: product.image,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    });
+  return (
+    <>
+      <Form onSubmit={onSubmit} className="space-y-5">
+        <FormInput
+          size="lg"
+          name="name"
+          label="Nombre"
+          defaultValue={product.name}
+        />
+        <FormInput
+          size="lg"
+          name="description"
+          label="Descripción"
+          defaultValue={product.description}
+        />
+        <FormInput
+          size="lg"
+          name="price"
+          label="Precio"
+          defaultValue={`${product.price}`}
+          options={{
+            pattern: {
+              message: "numbers only",
+              value: /^-?\d*\.?\d*$/,
+            },
+          }}
+        />
+        <FormInput
+          size="lg"
+          name="quantity"
+          label="Cantidad"
+          defaultValue={`${product.quantity}`}
+          options={{
+            pattern: {
+              message: "numbers only",
+              value: /^-?\d*\.?\d*$/,
+            },
+          }}
+        />
+        <Units selectedOption={product.Unit?.id} />
+        <Categories selectedOption={product.Category?.id} />
+        <div className="flex justify-end gap-5">
+          <Button
+            className="normal-case text-sm"
+            color="red"
+            variant="text"
+            onClick={handleOpen}
+          >
+            Eliminar
+          </Button>{" "}
+          <Button className="normal-case text-sm" type="submit">
+            Guardar
+          </Button>
+        </div>
+      </Form>
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        className="max-w-xs w-full min-w-xs"
+      >
+        <DialogHeader>Eliminar {product.name}</DialogHeader>
+        <DialogBody divider>
+          <span>
+            Vas a eliminar <span className="font-semibold">{product.name}</span>{" "}
+            de tu lista de productos. ¿Estás seguro?
+          </span>
+        </DialogBody>
+        <DialogFooter className="flex justify-end gap-5">
+          <Button
+            variant="text"
+            onClick={handleOpen}
+            className="mr-1 normal-case text-sm"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button
+            variant="gradient"
+            color="red"
+            onClick={() => {
+              deleteProduct(product.id);
+              handleOpen();
+            }}
+            className="normal-case text-sm"
+          >
+            <span>Confirmar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+    </>
+  );
+};
+
 const TabsNav = () => {
   const { data, isLoading } = useCategoriesWithProducts();
   const dataTab = data
@@ -38,9 +160,12 @@ const TabsNav = () => {
             <Typography variant="h5">{name}</Typography>
             <ul className="flex flex-wrap gap-4">
               {Products.map((product, index) => (
-                <Popover key={`${product.name}-${index}`} placement="bottom-start">
+                <Popover
+                  key={`${product.name}-${index}`}
+                  placement="bottom-start"
+                >
                   <PopoverHandler>
-                    <Typography as="li">
+                    <Typography as="li" className="cursor-pointer">
                       <Chip
                         value={product.name}
                         variant="gradient"
@@ -50,12 +175,7 @@ const TabsNav = () => {
                     </Typography>
                   </PopoverHandler>
                   <PopoverContent className="max-w-lg w-full z-30">
-                    <div className="p-5">
-                      <Typography variant="h5">{product.name}</Typography>
-                      <Typography variant="body1">
-                        {product.description}
-                      </Typography>
-                    </div>
+                    <EditDeleteFormProduct product={product} />
                   </PopoverContent>
                 </Popover>
               ))}
@@ -102,7 +222,7 @@ const TabsNav = () => {
   );
 };
 
-const Categories = () => {
+const Categories = ({ selectedOption }: { selectedOption?: string }) => {
   const { data } = useCategories();
   return (
     <FormSelect
@@ -117,12 +237,14 @@ const Categories = () => {
       }
       selectProps={{
         label: "Categoría",
+        size: "lg",
+        value: selectedOption,
       }}
     />
   );
 };
 
-const Units = () => {
+const Units = ({ selectedOption }: { selectedOption?: string }) => {
   const { data } = useUnits();
   return (
     <FormSelect
@@ -136,7 +258,9 @@ const Units = () => {
         []
       }
       selectProps={{
+        size: "lg",
         label: "Unidad",
+        value: selectedOption,
       }}
     />
   );
@@ -147,9 +271,10 @@ const PostProductForm = () => {
   const onSubmit = (data: PostProduct) => mutate(data);
   return (
     <Form onSubmit={onSubmit} className="space-y-5">
-      <FormInput name="name" label="Nombre" />
-      <FormInput name="description" label="Descripción" />
+      <FormInput name="name" label="Nombre" size="lg" />
+      <FormInput name="description" label="Descripción" size="lg" />
       <FormInput
+        size="lg"
         name="price"
         label="Precio"
         options={{
@@ -160,6 +285,7 @@ const PostProductForm = () => {
         }}
       />
       <FormInput
+        size="lg"
         name="quantity"
         label="Cantidad"
         options={{
@@ -171,9 +297,11 @@ const PostProductForm = () => {
       />
       <Units />
       <Categories />
-      <Button className="normal-case text-sm" type="submit">
-        Crear
-      </Button>
+      <div className="flex justify-end">
+        <Button className="normal-case text-sm" type="submit">
+          Crear
+        </Button>
+      </div>
     </Form>
   );
 };

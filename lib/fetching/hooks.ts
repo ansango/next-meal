@@ -1,5 +1,5 @@
 import { Product } from "@prisma/client";
-import { useQuery, useQueries, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import {
   CategoryPopulated,
@@ -8,6 +8,8 @@ import {
   fetchUnits,
   postProduct,
   PostProduct,
+  putProduct,
+  deleteProduct,
 } from "./functions";
 
 const staticConfig = { refetchOnMount: false, refetchOnWindowFocus: false };
@@ -37,8 +39,38 @@ export const useUnits = () =>
     ...staticConfig,
   });
 
-export const usePostProduct = () =>
-  useMutation({
+export const usePostProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationKey: ["post-product"],
     mutationFn: async (product: PostProduct) => postProduct(product),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["product", data.id], data);
+      queryClient.invalidateQueries(["categories-populated"]);
+    },
   });
+};
+
+export const usePutProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["put-product"],
+    mutationFn: async (product: Product) => putProduct(product),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["product", data.id], data);
+      queryClient.invalidateQueries(["categories-populated"]);
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["delete-product"],
+    mutationFn: async (id: string) => deleteProduct(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["product", data.id], undefined);
+      queryClient.invalidateQueries(["categories-populated"]);
+    },
+  });
+};

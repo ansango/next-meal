@@ -3,12 +3,9 @@ import {
   Option,
   SelectProps,
   SelectOptionProps,
-  useSelect,
-  Button,
 } from "@material-tailwind/react";
 import { FC } from "react";
 import { useFormContext, type RegisterOptions } from "react-hook-form";
-import FormInput from "./Input";
 
 type Props = {
   name: string;
@@ -43,7 +40,7 @@ const FormSelect: FC<Props> = ({
       {/*@ts-ignore*/}
       <Select {...selectProps} selected={selected}>
         {optionData.map(({ label, value }) => (
-          <Option key={value} {...optionProps}>
+          <Option key={value} value={value} {...optionProps}>
             {label}
           </Option>
         ))}
