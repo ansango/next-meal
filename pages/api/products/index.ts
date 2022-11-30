@@ -30,7 +30,6 @@ router.post(async (req, res) => {
   } else {
     try {
       const body = JSON.parse(req.body);
-      console.log(body);
       const product = await db.product.create({
         data: {
           name: body.name || "",

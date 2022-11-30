@@ -21,7 +21,14 @@ export const useCategoriesWithProducts = () =>
       (data: CategoryPopulated[]) => [
         {
           name: "Todos",
-          Products: data.flatMap(({ Products }) => Products) ?? [],
+          Products:
+            data
+              .flatMap(({ Products }) => Products)
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              ) ?? [],
         },
         ...data,
       ],
