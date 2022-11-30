@@ -33,7 +33,7 @@ export const Nav = () => {
 
   return (
     <header>
-      <Container>
+      <Container className="py-0">
         <Navbar className="mx-auto max-w-full px-0" shadow={false}>
           <div className="mx-auto flex items-center justify-between text-blue-gray-900">
             <div className="flex items-center space-x-4 lg:space-x-0">
