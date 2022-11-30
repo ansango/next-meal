@@ -59,9 +59,10 @@ model VerificationToken {
 }
 
 model Unit {
-    id      String    @id @default(auto()) @map("_id") @db.ObjectId
-    name    String
-    Product Product[]
+    id              String            @id @default(auto()) @map("_id") @db.ObjectId
+    name            String
+    Product         Product[]
+    ProductsOnMeals ProductsOnMeals[]
 
     @@unique([name])
 }
@@ -114,6 +115,14 @@ model Category {
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
     Products    Product[]
+}
+
+model CategoryMeal {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    description String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
     Meals       Meal[]
 }
 
@@ -127,7 +136,7 @@ model Meal {
 
     ProductsOnMeals ProductsOnMeals[]
     StepsOnMeal     StepsOnMeal[]
-    Category        Category?         @relation(fields: [categoryId], references: [id])
+    CategoryMeal    CategoryMeal?     @relation(fields: [categoryId], references: [id])
     categoryId      String?           @db.ObjectId
 }
 
@@ -137,6 +146,9 @@ model ProductsOnMeals {
     Meal      Meal    @relation(fields: [mealId], references: [id])
     productId String  @db.ObjectId
     Product   Product @relation(fields: [productId], references: [id])
+    quantity  Int?     
+    unitId    String? @db.ObjectId
+    Unit      Unit?   @relation(fields: [unitId], references: [id])
 }
 
 model Day {

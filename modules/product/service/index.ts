@@ -16,7 +16,7 @@ export const fetchCategories = async () =>
 export const fetchUnits = async () => await fetcher<Unit[]>("/api/units");
 
 export const postProduct = async (product: PostProduct) =>
-  await fetcher<Product>("/api/products", {
+  await fetcher<Product>("/api/product", {
     method: "POST",
     body: JSON.stringify(product),
   });
