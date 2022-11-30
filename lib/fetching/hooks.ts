@@ -45,7 +45,7 @@ export const usePostProduct = () => {
     mutationKey: ["post-product"],
     mutationFn: async (product: PostProduct) => postProduct(product),
     onSuccess: (data) => {
-      queryClient.setQueryData(["product", data.id], data);
+      queryClient.setQueryData(["post-product", data.id], data);
       queryClient.invalidateQueries(["categories-populated"]);
     },
   });
@@ -57,7 +57,7 @@ export const usePutProduct = () => {
     mutationKey: ["put-product"],
     mutationFn: async (product: Product) => putProduct(product),
     onSuccess: (data) => {
-      queryClient.setQueryData(["product", data.id], data);
+      queryClient.setQueryData(["put-product", data.id], data);
       queryClient.invalidateQueries(["categories-populated"]);
     },
   });
@@ -69,7 +69,7 @@ export const useDeleteProduct = () => {
     mutationKey: ["delete-product"],
     mutationFn: async (id: string) => deleteProduct(id),
     onSuccess: (data) => {
-      queryClient.setQueryData(["product", data.id], undefined);
+      queryClient.setQueryData(["delete-product", data.id], undefined);
       queryClient.invalidateQueries(["categories-populated"]);
     },
   });

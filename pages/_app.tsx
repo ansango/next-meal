@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Layout } from "components/common";
 import { SessionProvider, useSession } from "next-auth/react";
-import { type ReactNode } from "react";
+import { lazy, useEffect, useState, type ReactNode } from "react";
 import { type Session } from "next-auth";
 import { type NextComponentType } from "next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -34,10 +34,25 @@ const queryClient = new QueryClient({
   },
 });
 
+const ReactQueryDevtoolsProduction = lazy(() =>
+  import("@tanstack/react-query-devtools/build/lib/index.prod.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    })
+  )
+);
+
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: CustomAppProps) {
+  const [showDevtools, setShowDevtools] = useState(false);
+
+  useEffect(() => {
+    // @ts-ignore
+    window.toggleDevtools = () => setShowDevtools((old) => !old);
+  }, []);
+
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>

@@ -1,5 +1,8 @@
 import { getSession } from "lib/api/middleware/session";
-import { router, options } from "lib/api/middleware/router";
+import { options } from "lib/api/middleware/router";
+import { createRouter } from "next-connect";
+import type { NextApiRequest, NextApiResponse } from "next";
+const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.get(async (req, res) => {
   const session = await getSession(req, res);
