@@ -18,11 +18,11 @@ export const TabsNav: FC = () => {
   const { data, isLoading } = useCategoriesWithProducts();
   const dataTab = data
     ? data.map(({ name, Products }) => ({
-        label: `${name} (${Products.length})`,
+        label: name,
         value: name,
         desc: (
           <div className="space-y-5 py-5">
-            <Typography variant="h5">{name}</Typography>
+            <Typography variant="h5">{`${name} (${Products.length})`}</Typography>
             <ul className=" flex flex-wrap gap-4">
               {Products.map((product, index) => (
                 <Popover
@@ -51,7 +51,7 @@ export const TabsNav: FC = () => {
     : [];
   return (
     <Tabs value="Todos">
-      <TabsHeader className="grid gap-1 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <TabsHeader className="grid gap-1 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading ? (
           <>
             {Array.from({ length: 20 }, (_, i) => (
@@ -68,7 +68,7 @@ export const TabsNav: FC = () => {
           <>
             {dataTab.map(({ label, value }) => (
               <Tab key={value} value={value}>
-                {label}
+                <span className="line-clamp-1">{label}</span>
               </Tab>
             ))}
           </>
